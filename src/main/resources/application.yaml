@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${PG_HOST:localhost:5432}/quote_handler_db
+    username: ${PG_USER:user}
+    password: ${PG_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: true
+    show-sql: true
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:validate}
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+    enabled: true
+    drop-first: false
