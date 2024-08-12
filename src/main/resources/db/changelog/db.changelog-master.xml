@@ -7,5 +7,4 @@
     <changeSet id="1" author="baga">
         <sqlFile path="sql/schema.sql" relativeToChangelogFile="true"/>
     </changeSet>
-
 </databaseChangeLog>

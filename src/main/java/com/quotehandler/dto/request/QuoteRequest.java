@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuoteRq {
+public class QuoteRequest {
 
     @JsonProperty("isin")
     @NotBlank(message = "isin не может быть пустым")

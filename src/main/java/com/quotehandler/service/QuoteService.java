@@ -1,8 +1,8 @@
 package com.quotehandler.service;
 
-import com.quotehandler.dto.request.QuoteRq;
-import com.quotehandler.dto.response.ApiRs;
-import com.quotehandler.dto.response.QuoteRs;
+import com.quotehandler.dto.request.QuoteRequest;
+import com.quotehandler.dto.response.ApiResponse;
+import com.quotehandler.dto.response.QuoteResponse;
 import com.quotehandler.entity.EnergyLvl;
 import com.quotehandler.entity.Quote;
 import com.quotehandler.exception.BadRequestException;
@@ -28,25 +28,25 @@ public class QuoteService {
 
     @Transactional
     @Caching(cacheable = {
-            @Cacheable(cacheNames = "customerCache", cacheManager = "caffeineCacheManager")
+            @Cacheable(cacheNames = "quoteCache", cacheManager = "caffeineCacheManager")
     })
-    public ApiRs<QuoteRs> addQuote(QuoteRq quoteRq) {
-        String isin = quoteRq.getIsin();
-        double bid = quoteRq.getBid();
-        double ask = quoteRq.getAsk();
+    public ApiResponse<QuoteResponse> addQuote(QuoteRequest quoteRequest) {
+        String isin = quoteRequest.getIsin();
+        double bid = quoteRequest.getBid();
+        double ask = quoteRequest.getAsk();
         if (bid >= ask) {
             throw new BadRequestException("Значение bid указанной котировки должно быть меньше значения ask");
         }
 
-        ApiRs<QuoteRs> quoteApiRs;
+        ApiResponse<QuoteResponse> quoteApiResponse;
         Optional<Quote> quoteOptional = quoteRepository.findByIsin(isin);
-        quoteApiRs = quoteOptional
+        quoteApiResponse = quoteOptional
                 .map(quote -> updateQuoteInDatabase(quote, bid, ask))
                 .orElseGet(() -> saveQuoteInDatabase(isin, bid, ask));
-        return quoteApiRs;
+        return quoteApiResponse;
     }
 
-    private ApiRs<QuoteRs> saveQuoteInDatabase(String isin, double bid, double ask) {
+    private ApiResponse<QuoteResponse> saveQuoteInDatabase(String isin, double bid, double ask) {
         Quote quote = new Quote();
         quote.setIsin(isin);
         quote.setBid(bid);
@@ -63,7 +63,7 @@ public class QuoteService {
         return getQuoteApiRs(quote);
     }
 
-    private ApiRs<QuoteRs> updateQuoteInDatabase(Quote quote, double bid, double ask) {
+    private ApiResponse<QuoteResponse> updateQuoteInDatabase(Quote quote, double bid, double ask) {
         quote.setAsk(ask);
         quote.setBid(bid);
         quoteRepository.saveAndFlush(quote);
@@ -83,9 +83,9 @@ public class QuoteService {
         return bestPrice;
     }
 
-    private ApiRs<QuoteRs> getQuoteApiRs(Quote quote) {
-        return ApiRs.<QuoteRs>builder()
-                .data(QuoteRs.builder()
+    private ApiResponse<QuoteResponse> getQuoteApiRs(Quote quote) {
+        return ApiResponse.<QuoteResponse>builder()
+                .data(QuoteResponse.builder()
                         .isin(quote.getIsin())
                         .bid(quote.getBid())
                         .ask(quote.getAsk())

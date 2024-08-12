@@ -1,10 +1,13 @@
-FROM openjdk:21-jdk-slim
+FROM maven:3.9.8-sapmachine-21 AS build
 
 WORKDIR /handler
+COPY . /handler
+RUN mvn clean package -DskipTests
 
-COPY target/quotehandler-0.0.1-SNAPSHOT.jar /handler/quotehandler.jar
+FROM openjdk:21-jdk
 
-EXPOSE 8080
+WORKDIR /quotehandler
+COPY --from=build /handler/target/*.jar quotehandler.jar
+COPY --from=build /handler/src/main/resources/application.yml application.yml
 
-# "-Xms512m", "-Xmx1024m"
-ENTRYPOINT ["java", "-jar", "/handler/quotehandler.jar"]
+ENTRYPOINT ["java", "-jar", "quotehandler.jar"]

@@ -1,6 +1,7 @@
-package com.quotehandler.exception;
+package com.quotehandler.controller.advice;
 
-import com.quotehandler.dto.response.ErrorRs;
+import com.quotehandler.dto.response.ErrorResponse;
+import com.quotehandler.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,28 +14,28 @@ import java.util.Objects;
 
 @ControllerAdvice
 @Slf4j
-public class ExceptionHandlerController {
+public class ControllerAdviser {
 
     @ExceptionHandler({BadRequestException.class, HttpMessageNotReadableException.class})
-    public ResponseEntity<ErrorRs> handleException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         log.warn(ex.getMessage());
-        ErrorRs errorRs = ErrorRs.builder()
-                .error("BadRequestException")
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .error("")
                 .timestamp(System.currentTimeMillis())
                 .errorDescription(ex.getMessage())
                 .build();
-        return new ResponseEntity<>(errorRs, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorRs> handleValidationException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
         String cause = Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage();
         log.warn(ex.getMessage());
-        ErrorRs errorRs = ErrorRs.builder()
-                .error("BadRequestException")
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .error("")
                 .timestamp(System.currentTimeMillis())
                 .errorDescription(cause)
                 .build();
-        return new ResponseEntity<>(errorRs, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

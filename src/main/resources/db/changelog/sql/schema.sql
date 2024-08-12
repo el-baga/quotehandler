@@ -23,7 +23,7 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.quote (
     id bigint NOT NULL,
-    isin character varying(255),
+    isin character varying(255) NOT NULL,
     bid double precision,
     ask double precision
 );
@@ -55,7 +55,6 @@ CREATE TABLE public.energy_lvl (
     quote_id bigint
 );
 
-
 --
 -- Name: energy_lvl_id_seq; Type: SEQUENCE; Schema: public
 --
@@ -85,12 +84,15 @@ ALTER TABLE ONLY public.quote ALTER COLUMN id SET DEFAULT nextval('public.quote_
 
 ALTER TABLE ONLY public.energy_lvl ALTER COLUMN id SET DEFAULT nextval('public.energy_lvl_id_seq'::regclass);
 
+--
+-- Name: quote quote_pkey; Type: CONSTRAINT; Schema: public
+--
+
 ALTER TABLE ONLY public.quote
     ADD CONSTRAINT quote_pkey PRIMARY KEY (id);
 
-
 --
--- Name: page energy_lvl_pkey; Type: CONSTRAINT; Schema: public
+-- Name: energy_lvl energy_lvl_pkey; Type: CONSTRAINT; Schema: public
 --
 
 ALTER TABLE ONLY public.energy_lvl

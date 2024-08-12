@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EnergyLvlRepository extends JpaRepository<EnergyLvl, Long> {
-
     EnergyLvl findByQuoteId(Long quoteId);
 }

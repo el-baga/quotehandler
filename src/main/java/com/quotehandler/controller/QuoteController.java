@@ -1,8 +1,8 @@
 package com.quotehandler.controller;
 
-import com.quotehandler.dto.request.QuoteRq;
-import com.quotehandler.dto.response.ApiRs;
-import com.quotehandler.dto.response.QuoteRs;
+import com.quotehandler.dto.request.QuoteRequest;
+import com.quotehandler.dto.response.ApiResponse;
+import com.quotehandler.dto.response.QuoteResponse;
 import com.quotehandler.service.QuoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class QuoteController {
     private final QuoteService quoteService;
 
     @PostMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiRs<QuoteRs> addQuote(@Valid @RequestBody QuoteRq quoteRq) {
-        return quoteService.addQuote(quoteRq);
+    public ApiResponse<QuoteResponse> addQuote(@Valid @RequestBody QuoteRequest quoteRequest) {
+        return quoteService.addQuote(quoteRequest);
     }
 }

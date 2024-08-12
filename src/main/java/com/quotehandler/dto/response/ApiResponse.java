@@ -1,17 +1,19 @@
 package com.quotehandler.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
+
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EnergyLvlRs {
+public class ApiResponse<T> {
 
-    private String isin;
+    @Builder.Default
+    private Timestamp timestamp = Timestamp.from(Instant.now());
 
-    @JsonProperty("best_price")
-    private double bestPrice;
+    private T data;
 }
